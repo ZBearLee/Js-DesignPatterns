@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>工厂模式</title>
+</head>
+
+<body>
+
+    <script>
+        //简单工厂模式是由一个方法来决定到底要创建哪个类的实例, 而这些实例经常都拥有相同的接口. 
+        //这种模式主要用在所实例化的类型在编译期并不能确定， 而是在执行期决定的情况。
+        //工厂模式类似于现实生活中的工厂可以产生大量相似的商品，去做同样的事情，实现同样的效果;这时候需要使用工厂模式。
+
+        //demo1 简单的工厂模式可以理解为解决多个相似的问题
+        function CreatePerson(name, age, sex) {
+            var obj = new Object();
+            obj.name = name;
+            obj.age = age;
+            obj.sex = sex;
+            obj.sayName = function () {
+                return this.name;
+            }
+            return obj;
+        }
+        var p1 = new CreatePerson("longen", '28', '男');
+        var p2 = new CreatePerson("tugenhua", '27', '女');
+        console.log(p1.name); // longen
+        console.log(p1.age);  // 28
+        console.log(p1.sex);  // 男
+        console.log(p1.sayName()); // longen
+
+        console.log(p2.name);  // tugenhua
+        console.log(p2.age);   // 27
+        console.log(p2.sex);   // 女
+        console.log(p2.sayName()); // tugenhua
+
+        // 返回都是object 无法识别对象的类型 不知道他们是哪个对象的实列
+        console.log(typeof p1);  // object
+        console.log(typeof p2);  // object
+        console.log(p1 instanceof Object); // true
+        // 优点：能解决多个相似的问题。
+        // 缺点：不能知道对象识别的问题(对象的类型不知道)
+
+
+        //demo2 复杂的工厂模式定义是：将其成员对象的实列化推迟到子类中，子类可以重写父类接口方法以便创建的时候指定自己的对象类型
+        var BicycleShop = function () {
+        }
+        BicycleShop.prototype = {
+            sellBicycle: function (model) {
+                var bicycle
+                switch (model) {
+                    case 'The Speedster':
+                        bicycle = new Speedster()
+                        break
+                    case 'The lowrider':
+                        bicycle = new Lowrider()
+                        break
+                    case 'The Comfort Cruiser ':
+                    default:
+                        bicycle = new ComfortCruiser()
+                }
+                //组装起来
+                bicycle.assemble()
+                bicycle.wash()
+                bicycle.ride()
+                bicycle.repair()
+                return bicycle
+            }
+        }
+        function ComfortCruiser() {
+
+        }
+        ComfortCruiser.prototype = {
+            assemble: function () {
+                console.log('组装车')
+            },
+            wash: function () {
+                console.log('清洗一下车')
+            },
+            ride: function () {
+                console.log('包骑三年')
+            },
+            repair: function () {
+                console.log('包修一年')
+            }
+        }
+        var calforniaCruiser = new BicycleShop()
+        var yourNewBike = calforniaCruiser.sellBicycle()
+
+        //demo3
+        var BicycleShop = function () {
+        }
+        BicycleShop.prototype = {
+            sellBicycle: function (model) {
+                var bicycle
+                switch (model) {
+                    case 'The Speedster':
+                        bicycle = new Speedster()
+                        break
+                    case 'The Lowrider':
+                        bicycle = new Lowrider()
+                        break
+                    case 'The Gaint':
+                        bicycle = new Gaint()
+                        break
+                    case 'The Comfort Cruiser':
+                    default:
+                        bicycle = new ComfortCruiser()
+                }
+                // 组装
+                bicycle.assemble()
+                bicycle.wash()
+                bicycle.ride()
+                bicycle.repair()
+                return bicycle
+            }
+        }
+
+        function Bicycle() {
+        }
+        Bicycle.prototype = {
+            wash: function () {
+                console.log('清洗车')
+            },
+            assemble: function () {
+                console.log('组装车')
+            },
+            ride: function () {
+                console.log('包骑三年')
+            },
+            repair: function () {
+                console.log('保修一年')
+            }
+        }
+
+        function Speedster() {
+            Bicycle.apply(this, arguments)
+            this.brand = 'Speedster'
+            this.price = 2014
+        }
+        Speedster.prototype = new Bicycle()
+        function ComfortCruiser() {
+            Bicycle.apply(this, arguments)
+            this.brand = 'The Comfort Cruiser'
+            this.price = 3000
+        }
+        ComfortCruiser.prototype = new Bicycle()
+        function Gaint() {
+            Bicycle.apply(this, arguments)
+            this.brand = 'The Gaint '
+            this.price = 4019
+        }
+        Gaint.prototype = new Bicycle()
+
+        var californiaCruisers = new BicycleShop()
+        var yourNewBike = californiaCruisers.sellBicycle('The Gaint')
+        //将Gaint加进去
+        console.log(yourNewBike.brand)
+        //将实例化车子交给工厂对象来做，云端
+        var BicycleFactory = {
+            createBicycle: function (model) {
+            }
+        }
+    </script>
+</body>
+
+</html>
