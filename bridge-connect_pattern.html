@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>桥接模式</title>
+</head>
+
+<body>
+    <script>
+        // 桥接模式（Bridge）将抽象部分与它的实现部分分离，使它们都可以独立地变化
+        // 桥接模式的作用在于将实现部分和抽象部分分离开来， 以便两者可以独立的变化
+        var singleton = function (fn) {
+            var result;
+            return function () {
+                return result || (result = fn.apply(this, arguments));
+            }
+        }
+        var createMask = singleton(function () {
+            return document.body.appendChild(document.createElement('div'));
+        })
+        var createScript = singleton(function () {
+            return document.body.appendChild(document.createElement('script'));
+        })
+        //singleton是抽象部分， 而createMask是实现部分。 他们完全可以独自变化互不影响
+    </script>
+</body>
+
+</html>
