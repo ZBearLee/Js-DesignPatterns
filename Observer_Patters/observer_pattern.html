@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>观察者模式</title>
+</head>
+
+<body>
+    <script>
+        //观察者模式又叫发布订阅者模式，它定义了对象间的一种一对多的关系，让多个观察者对象同时监听某一个主题对象，当一个对象发生改变时，所有依赖于它的对象都将得到通知
+        //支持简单的广播通信，当对象状态发生改变时，会自动通知已经订阅过的对象
+        //发布者与订阅者耦合性降低，发布者只管发布一条消息出去，它不关心这条消息如何被订阅者使用，同时，订阅者只监听发布者的事件名，只要发布者的事件名不变，它不管发布者如何改变
+
+        //demo1
+        var shoeObj = {}; // 定义发布者
+        shoeObj.list = []; // 缓存列表 存放订阅者回调函数
+
+        // 增加订阅者
+        shoeObj.listen = function (fn) {
+            shoeObj.list.push(fn);  // 订阅消息添加到缓存列表
+        }
+
+        // 发布消息
+        shoeObj.trigger = function () {
+            for (var i = 0, fn; fn = this.list[i++];) {
+                fn.apply(this, arguments);
+            }
+        }
+        // 小红订阅如下消息
+        shoeObj.listen(function (color, size) {
+            console.log("颜色是：" + color);
+            console.log("尺码是：" + size);
+        });
+
+        // 小花订阅如下消息
+        shoeObj.listen(function (color, size) {
+            console.log("再次打印颜色是：" + color);
+            console.log("再次打印尺码是：" + size);
+        });
+        shoeObj.trigger("红色", 40);
+        shoeObj.trigger("黑色", 42);
+
+
+
+        //demo2  订阅者只订阅自己感兴趣的消息
+        var shoeObj = {}; // 定义发布者
+        shoeObj.list = []; // 缓存列表 存放订阅者回调函数
+
+        // 增加订阅者
+        shoeObj.listen = function (key, fn) {
+            if (!this.list[key]) {
+                // 如果还没有订阅过此类消息，给该类消息创建一个缓存列表
+                this.list[key] = [];
+            }
+            this.list[key].push(fn);  // 订阅消息添加到缓存列表
+        }
+
+        // 发布消息
+        shoeObj.trigger = function () {
+            var key = Array.prototype.shift.call(arguments); // 取出消息类型名称
+            var fns = this.list[key];  // 取出该消息对应的回调函数的集合
+
+            // 如果没有订阅过该消息的话，则返回
+            if (!fns || fns.length === 0) {
+                return;
+            }
+            for (var i = 0, fn; fn = fns[i++];) {
+                fn.apply(this, arguments); // arguments 是发布消息时附送的参数
+            }
+        };
+
+        // 小红订阅如下消息
+        shoeObj.listen('red', function (size) {
+            console.log("尺码是：" + size);
+        });
+
+        // 小花订阅如下消息
+        shoeObj.listen('block', function (size) {
+            console.log("再次打印尺码是：" + size);
+        });
+        shoeObj.trigger("red", 40);
+        shoeObj.trigger("block", 42);
+
+        //demo3  订阅模式的代码封装
+        var event = {
+            list: [],
+            listen: function (key, fn) {
+                if (!this.list[key]) {
+                    this.list[key] = [];
+                }
+                // 订阅的消息添加到缓存列表中
+                this.list[key].push(fn);
+            },
+            trigger: function () {
+                var key = Array.prototype.shift.call(arguments);
+                var fns = this.list[key];
+                // 如果没有订阅过该消息的话，则返回
+                if (!fns || fns.length === 0) {
+                    return;
+                }
+                for (var i = 0, fn; fn = fns[i++];) {
+                    fn.apply(this, arguments);
+                }
+            }
+        };
+
+        //demo4 定义一个initEvent函数，这个函数使所有的普通对象都具有发布订阅功能
+        var initEvent = function (obj) {
+            for (var i in event) {
+                obj[i] = event[i];
+            }
+        };
+        // 我们再来测试下，我们还是给shoeObj这个对象添加发布-订阅功能；
+        var shoeObj = {};
+        initEvent(shoeObj);
+
+        // 小红订阅如下消息
+        shoeObj.listen('red', function (size) {
+            console.log("尺码是：" + size);
+        });
+
+        // 小花订阅如下消息
+        shoeObj.listen('block', function (size) {
+            console.log("再次打印尺码是：" + size);
+        });
+        shoeObj.trigger("red", 40);
+        shoeObj.trigger("block", 42);
+    </script>
+</body>
+
+</html>
