@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>单例模式</title>
+</head>
+
+<body>
+    <script>
+        //  单例/体模式有一个重要的特点，就是可以仅被实例化一次 
+        // 可以用来划分命名空间，减少全局变量的数量。 
+        // 使用单例模式可以使代码组织的更为一致，使代码容易阅读和维护。
+
+        //demo1
+        var Singleton = {
+            a: 1,
+            b: 2,
+            method1: function () {
+                return this.a;
+            },
+            method2: function () {
+                return this.b;
+            }
+        };
+        //上面只是简单的字面量结构，上面的所有成员变量都是通过Singleton来访问的，但是它并不是单体模式
+
+        //demo2 单例模式基本结构
+        var Singleton = function (name) {
+            this.name = name;
+            this.instance = null;
+        };
+        Singleton.prototype.getName = function () {
+            return this.name;
+        }
+        // 获取实例对象
+        function getInstance(name) {
+            if (!this.instance) {
+                this.instance = new Singleton(name);
+            }
+            return this.instance;
+        }
+        // 测试单体模式的实例
+        var a = getInstance("aa");
+        var b = getInstance("bb");
+        console.log(a === b);   // true
+        //由于单体模式只实例化一次，因此第一次调用，返回的是a实例对象，当我们继续调用的时候，b的实例就是a的实例，因此下面都是打印的是aa；
+
+        //demo3 使用代理实现单列模式的好处
+        var CreateDiv = function (html) {
+            this.html = html;
+            this.init();
+        }
+        CreateDiv.prototype.init = function () {
+            var div = document.createElement("div");
+            div.innerHTML = this.html;
+            document.body.appendChild(div);
+        };
+        // 代理实现单体模式
+        var ProxyMode = (function () {
+            var instance;
+            return function (html) {
+                if (!instance) {
+                    instance = new CreateDiv("我来测试下");
+                }
+                return instance;
+            }
+        })();
+        var a = new ProxyMode("aaa");
+        var b = new ProxyMode("bbb");
+        console.log(a === b);// true
+        //比如我现在页面上需要创建一个div的元素，那么我们肯定需要有一个创建div的函数，
+        //而现在我只需要这个函数只负责创建div元素，其他的它不想管，也就是想实现单一职责原则，
+        //就好比淘宝的kissy一样，一开始的时候他们定义kissy只做一件事，并且把这件事做好，
+        //具体的单体模式中的实例化类的事情交给代理函数去处理，这样做的好处是具体的业务逻辑分开了，
+        //代理只管代理的业务逻辑，在这里代理的作用是实例化对象，并且只实例化一次; 
+        //创建div代码只管创建div，其他的不管
+
+        //demo4  实现单体模式弹窗
+        var createWindow = (function () {
+            var div;
+            return function () {
+                if (!div) {
+                    div = document.createElement("div");
+                    div.innerHTML = "我是弹窗内容";
+                    div.style.display = 'none';
+                    document.body.appendChild(div);
+                }
+                return div;
+            }
+        })();
+        document.getElementById("Id").onclick = function () {
+            // 点击后先创建一个div元素
+            var win = createWindow();
+            win.style.display = "block";
+        }
+
+
+        //demo5 测试
+        // 创建div
+        var createWindow = function () {
+            var div = document.createElement("div");
+            div.innerHTML = "我是弹窗内容";
+            div.style.display = 'none';
+            document.body.appendChild(div);
+            return div;
+        };
+        // 创建iframe
+        var createIframe = function () {
+            var iframe = document.createElement("iframe");
+            document.body.appendChild(iframe);
+            return iframe;
+        };
+        // 获取实例的封装代码
+        var getInstance = function (fn) {
+            var result;
+            return function () {
+                return result || (result = fn.call(this, arguments));
+            }
+        };
+        // 测试创建div
+        var createSingleDiv = getInstance(createWindow);
+        document.getElementById("Id").onclick = function () {
+            var win = createSingleDiv();
+            win.style.display = "block";
+        };
+        // 测试创建iframe
+        var createSingleIframe = getInstance(createIframe);
+        document.getElementById("Id").onclick = function () {
+            var win = createSingleIframe();
+            win.src = "http://cnblogs.com";
+        };
+    </script>
+</body>
+
+</html>
