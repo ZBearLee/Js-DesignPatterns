@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>外观模式</title>
+</head>
+
+<body>
+    <script>
+        // 通过编写一个单独的函数，来简化对一个或多个更大型的，可能更为复杂的函数的访问
+        // 外观模式就是一个函数，封装了复杂的操作。
+        //当需要通过一个单独的函数或方法来访问一系列的函数或方法调用，以简化代码库的其余内容，使得代码更容易跟踪管理或者更好的维护时，可以使用外观模式
+        function ajaxCall(type, url, callback, data) {
+            // 根据当前浏览器获取对ajax连接对象的引用
+            var xhr = (function () {
+                try {
+                    // 所有现代浏览器所使用的标准方法
+                    return new XMLHttpRequest();
+                } catch (e) { }
+                // 较老版本的internet Explorer兼容
+                try {
+                    return new ActiveXObject("Msxml2.XMLHTTP.6.0");
+                } catch (e) { }
+                try {
+                    return new ActiveXObject("Msxml2.XMLHTTP.3.0");
+                } catch (e) { }
+                try {
+                    return new ActiveXObject("Microsoft.XMLHTTP");
+                } catch (e) { }
+                // 如果没能找到相关的ajax连接对象，则跑出一个错误。
+                throw new Error("Ajax not support in this browser.")
+            }()),
+                STATE_LOADED = 4,
+                STATUS_OK = 200;
+            // 一但从服务器收到表示成功的相应消息，则执行所给定的回调方法
+            xhr.onreadystatechange = function{
+                if (xhr.readyState !== STATE_LOADED) {
+                    return;
+                }
+                if (xhr.state == STATUS_OK) {
+                    callback(xhr.responseText);
+                }
+            }
+            // 使用浏览器的ajax连接对象来向所给定的URL发出相关的调用
+            xhr.open(type.toUpperCase(), url);
+            xhr.send(data);
+        }
+        // 使用方法
+        ajaxCall("get", "/user/12345", function (rs) {
+            alert('收到的数据为：' + rs);
+        })
+    </script>
+</body>
+
+</html>
