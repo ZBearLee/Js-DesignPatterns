@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>鸭子模型</title>
+</head>
+
+<body>
+    <script>
+        // JavaScript没有提供传统面向对象语言的类式继承,通过原型委托的形式实现对象与对象之间的继承,没有对抽象类和接口的支持
+        //鸭子类型（duck typing）如果它走起路来像鸭子，叫起来也是鸭子，那么它就是鸭子。
+        //只关注对象的行为，不关注对象本身面向接口编型 ，而不是面向实现编程，是设计模式中最重要的思想
+
+        var duck = {
+            duckSinging: function () {
+                console.log('呱呱呱');
+            }
+        }
+        alert('duck');
+        var chicken = {
+            duckSinging: function () {
+                console.log('呱呱呱');
+            }
+        }
+        alert('chicken');
+        var chior = [];
+        var joinChior = function (animal) {
+            //检测是个鸭子但是没有类型检测
+            if (animal && typeof animal.duckSinging === 'function') { //typeof就是判断参数是什么类型的实例，typeof运算符，满足检测属性
+            //具有相同接口，在js中就认为是一类对象                
+                chior.push(animal);
+                console.log('恭喜你加入合唱团');
+                console.log('当前已募集' + chior.length + '只鸭子');
+            }
+        }
+        joinChior(duck);
+        joinChior(duck);
+        joinChior(chicken);
+    </script>
+</body>
+
+</html>
