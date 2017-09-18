@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>模板方法模式</title>
+</head>
+
+<body>
+    <script>
+        //模板方法模式由二部分组成，第一部分是抽象父类，第二部分是具体实现的子类,一般的情况下是抽象父类封装了子类的算法框架
+        //模式方法是预先定义一组算法，先把算法的不变部分抽象到父类，再将另外一些可变的步骤延迟到子类去实现
+        //工厂模式的意图是根据子类的实现最终获得一种对象. 而模版方法模式着重于父类对子类的控制.
+
+        //demo1
+        var BaiDuInterview = function () { };
+        BaiDuInterview.prototype.writtenTest = function () {
+            console.log("我终于看到百度的笔试题了~");
+        };
+        BaiDuInterview.prototype.technicalInterview = function () {
+            console.log("我是百度的技术负责人");
+        };
+        BaiDuInterview.prototype.leader = function () {
+            console.log("百度leader来面试了");
+        };
+        BaiDuInterview.prototype.waitNotice = function () {
+            console.log("百度的人力资源太不给力了，到现在都不给我通知");
+        };
+        BaiDuInterview.prototype.init = function () {
+            this.writtenTest();
+            this.technicalInterview();
+            this.leader();
+            this.waitNotice();
+        };
+        var baiDuInterview = new BaiDuInterview();
+        baiDuInterview.init();
+
+
+        //demo2 把公用代码提取出来；我们首先定义一个类
+        //有不同的笔试题，都交给子类去具体实现，父类方法不管具体如何实现，笔试题具体是什么样的
+        var Interview = function () { };
+        Interview.prototype.writtenTest = function () {
+            console.log("我终于看到笔试题了~");
+        };
+        Interview.prototype.technicalInterview = function () {
+            console.log("我是技术负责人负责技术面试");
+        };
+        Interview.prototype.leader = function () {
+            console.log("leader来面试了");
+        };
+        Interview.prototype.waitNotice = function () {
+            console.log("人力资源太不给力了，到现在都不给我通知");
+        };
+        Interview.prototype.init = function () {
+            this.writtenTest();
+            this.technicalInterview();
+            this.leader();
+            this.waitNotice();
+        };
+        //创建子类
+        var BaiDuInterview = function () { };
+        BaiDuInterview.prototype = new Interview();
+        //子类重写父类方法
+        BaiDuInterview.prototype.writtenTest = function () {
+            console.log("我终于看到百度的笔试题了");
+        }
+        BaiDuInterview.prototype.technicalInterview = function () {
+            console.log("我是百度的技术负责人，想面试找我");
+        }
+        BaiDuInterview.prototype.leader = function () {
+            console.log("我是百度的leader，不想加班的或者业绩提不上去的给我滚蛋");
+        }
+        BaiDuInterview.prototype.waitNotice = function () {
+            console.log("百度的人力资源太不给力了，我等的花儿都谢了！！");
+        }
+        var baiDuInterview = new BaiDuInterview();
+        baiDuInterview.init();
+        //直接调用子类baiDuInterview.init()方法，由于我们子类baiDuInterview没有init方法，
+        //但是它继承了父类，所以会到父类中查找对应的init方法；所以会迎着原型链到父类中查找
+    </script>
+</body>
+
+</html>
