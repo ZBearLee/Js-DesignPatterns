@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>策略模式</title>
+</head>
+
+<body>
+    <script>
+        //  策略模式的定义是：定义一系列的算法，把它们一个个封装起来，并且使它们可以相互替换
+        //将不变的部分和变化的部分隔开，实际就是将算法的使用和实现分离出来
+        //  优点： 1. 策略模式利用组合，委托等技术和思想，有效的避免很多if条件语句。
+        //        2. 策略模式提供了开放-封闭原则，使代码更容易理解和扩展。
+        //        3. 策略模式中的代码可以复用
+
+        //demo1
+        var performanceA = function () { };
+        performanceA.prototype.calculate = function (salary) {
+            return salary * 4;
+        };
+        var performanceB = function () { };
+        performanceB.prototype.calculate = function (salary) {
+            return salary * 3;
+        };
+        var performanceC = function () { };
+        performanceC.prototype.calculate = function (salary) {
+            return salary * 2;
+        };
+        // 奖金类
+        var Bouns = function () {
+            this.salary = null;    // 原始工资
+            this.levelObj = null;  // 绩效等级对应的策略对象
+        };
+        Bouns.prototype.setSalary = function (salary) {
+            this.salary = salary;  // 保存员工的原始工资
+        };
+        Bouns.prototype.setlevelObj = function (levelObj) {
+            this.levelObj = levelObj;  // 设置员工绩效等级对应的策略对象
+        };
+        // 取得奖金数
+        Bouns.prototype.getBouns = function () {
+            // 把计算奖金的操作委托给对应的策略对象
+            return this.levelObj.calculate(this.salary);
+        };
+        var bouns = new Bouns();
+        bouns.setSalary(10000);
+        bouns.setlevelObj(new performanceA()); // 设置策略对象
+        console.log(bouns.getBouns());  // 40000
+
+        bouns.setlevelObj(new performanceB()); // 设置策略对象
+        console.log(bouns.getBouns());  // 30000
+
+        //demo2
+        var obj = {
+            "A": function (salary) {
+                return salary * 4;
+            },
+            "B": function (salary) {
+                return salary * 3;
+            },
+            "C": function (salary) {
+                return salary * 2;
+            }
+        };
+        var calculateBouns = function (level, salary) {
+            return obj[level](salary);
+        };
+        console.log(calculateBouns('A', 10000)); // 40000
+        //策略模式指的是定义一系列的算法，并且把它们封装起来，但是策略模式不仅仅只封装算法，
+        //我们还可以对用来封装一系列的业务规则，只要这些业务规则目标一致，我们就可以使用策略模式来封装它们        
+    </script>
+</body>
+
+</html>
