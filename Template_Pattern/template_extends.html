@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var CaffeineBeverage = function () {
+        }
+        CaffeineBeverage.prototype.init = function () {
+            this.boilWater()
+            this.brew()
+            this.pourInCup()
+            if (this.customerWantsCondiments) {
+                this.addConditons()
+            }
+        }
+        CaffeineBeverage.prototype.boilWater = function () {
+            console.log("将水烧开!")
+        }
+        CaffeineBeverage.prototype.pourInCup = function () {
+            console.log('将饮料倒进杯子里')
+        }
+        CaffeineBeverage.prototype.brew = function () {
+            throw new Error('')
+        }
+        CaffeineBeverage.prototype.addConditons = function () {
+            throw new Error('')
+        }
+        CaffeineBeverage.prototype.customerWantsCondiments = function () {
+            return true
+        }
+        var Coffee = function () {
+            CaffeineBeverage.apply(this, arguments)
+        }
+        Coffee.prototype = new CaffeineBeverage()
+        Coffee.prototype.brew = function () {
+            console.log('从咖啡机将咖啡导进去')
+        }
+        Coffee.prototype.addConditons = function () {
+            console.log('添加糖和牛奶')
+        }
+        Coffee.prototype.customerWantsCondiments = function () {
+            return confirm("你想添加糖和牛奶吗？")
+        }
+        var coffee = new Coffee
+        coffee.init()
+        var Tea = function () {
+            CaffeineBeverage.apply(this)
+        }
+        Tea.prototype = new CaffeineBeverage()
+        Tea.prototype.brew = function () {
+            console.log("泡茶叶!")
+        }
+        Tea.prototype.addConditons = function () {
+            console.log("添加柠檬!")
+        }
+        Tea.prototype.customerWantsCondiments = function () {
+            return confirm("你想添加柠檬嘛？")
+        }
+        var tea = new Tea()
+        tea.init()
+    </script>
+</body>
+
+</html>

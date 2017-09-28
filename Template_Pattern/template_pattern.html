@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Coffee or Tea模板模式</title>
+</head>
+
+<body>
+    <h1>泡一杯咖啡</h1>
+    <div>
+        把水煮沸<br> 把沸水冲泡咖啡
+        <br> 把咖啡倒进杯子
+        <br> 加糖和牛奶
+        <br>
+    </div>
+    <h2>泡一杯茶</h2>
+    <div>
+        把水煮沸<br> 用沸水浸泡茶叶
+        <br> 把茶水倒进杯子
+        <br> 加柠檬 <br>
+    </div>
+    <h2>泡饮品</h2>
+    <p>把水煮沸</p>
+    <p>把沸水冲泡饮料</p>
+    <p>把饮料倒进杯子</p>
+    <p>加调料</p>
+    <script>
+        var Coffee = function () {
+        }
+        Coffee.prototype.boilWater = function () {
+            console.log('水煮开了')
+        }
+        Coffee.prototype.brewCoffeeGriends = function () {
+            console.log('用沸水冲洗咖啡')
+        }
+        Coffee.prototype.pourInCup = function () {
+            console.log('把咖啡倒进杯子')
+        }
+        Coffee.prototype.addSuarAnMilk = function () {
+            console.log('加糖和牛奶');
+        }
+        //封装  将实现的细节交给类的内部
+        Coffee.prototype.init = function () {
+            this.boilWater();
+            this.brewCoffeeGriends();
+            this.pourInCup();
+            this.addSuarAnMilk();
+        }
+        var coffee = new Coffee();
+        coffee.init();
+
+        class Tea {
+            constructor() {
+            }
+            boilWater() {
+                console.log('把水烧开');
+            }
+            steepTeaBag() {
+                console.log('用沸水浸泡茶叶')
+            }
+            pourInCup() {
+                console.log('把茶水倒进杯子')
+            }
+            addLemon() {
+                console.log('加柠檬')
+            }
+            init() {
+                this.boilWater();
+                this.steepTeaBag();
+                this.pourInCup();
+                this.addLemon();
+            }
+        }
+        var tea = new Tea();
+        tea.init();
+        //父类跟子类之间的关系,代码思想重复了,应该使用继承 override
+        //共同点  基类  分离它的差异点  子类的override
+        //面向对象  抽象类  abstract class
+        //不用实例化 而是子类实现的抽象
+    </script>
+</body>
+
+</html>
